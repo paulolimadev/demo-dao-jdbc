@@ -61,7 +61,7 @@ public class SellerDaoJDBC implements SellerDao {
 			throw new DbException(e.getMessage());
 		}
 		finally {
-			DB.closeConnection();
+			DB.closeStatement(st);
 		}
 	}
 
@@ -93,10 +93,23 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
-
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			
+			st.setInt(1, id);
+			
+			st.executeUpdate();	
+		} 
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());			
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
+	
 	@Override
 	public Seller findById(Integer id) {
 		PreparedStatement st = null;
